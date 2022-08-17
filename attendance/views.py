@@ -119,11 +119,6 @@ def visScatter(request):
    context = {'student_filter':student_filter, 'gra': chartt }
    return render(request, 'attendance/scatterplot.html', context)
 
-
-
-
-
-
 #functions for different data visuals
 
 def barPlot(df):#bar chart which 
