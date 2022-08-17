@@ -37,7 +37,8 @@ def index(request):
       return render(request,"attendance/error.html")#error page
 
 #filtering data from filters.py
-def visuals(request):
+def visBar(request):
+ 
    student = Student.objects.all()
    student_filter = StudentFilter(request.GET,queryset=student)
    ps = student_filter.qs
@@ -49,10 +50,79 @@ def visuals(request):
                'Submitted':s.Submitted 
          }  for s in ps
       ]
+
    df = pd.DataFrame(project_data)
-   chartt = scatterPlot(df)
-   context = {'student_filter':student_filter, 'gra': chartt}
+  
+   chartt = barPlot(df)
+   context = {'student_filter':student_filter, 'gra': chartt }
    return render(request, 'attendance/visuals.html', context)
+
+def visAvg(request):
+ 
+   student = Student.objects.all()
+   student_filter = StudentFilter(request.GET,queryset=student)
+   ps = student_filter.qs
+   project_data = [ {
+               'Users': str(s.User),
+               'Teaching Sessions': s.Teaching_Sessions,
+               'Attended Sessions': s.Attended ,
+               'Course Title': s.Course_Title, 
+               'Submitted':s.Submitted 
+         }  for s in ps
+      ]
+
+   df = pd.DataFrame(project_data)
+  
+   chartt = avgPlot(df)
+   context = {'student_filter':student_filter, 'gra': chartt }
+   return render(request, 'attendance/averagebar.html', context)
+
+def visBox(request):
+ 
+   student = Student.objects.all()
+   student_filter = StudentFilter(request.GET,queryset=student)
+   ps = student_filter.qs
+   project_data = [ {
+               'Users': str(s.User),
+               'Teaching Sessions': s.Teaching_Sessions,
+               'Attended Sessions': s.Attended ,
+               'Course Title': s.Course_Title, 
+               'Submitted':s.Submitted 
+         }  for s in ps
+      ]
+
+   df = pd.DataFrame(project_data)
+  
+   chartt = boxPlot(df)
+
+   context = {'student_filter':student_filter, 'gra': chartt }
+   return render(request, 'attendance/boxplot.html', context)
+
+
+def visScatter(request):
+ 
+   student = Student.objects.all()
+   student_filter = StudentFilter(request.GET,queryset=student)
+   ps = student_filter.qs
+   project_data = [ {
+               'Users': str(s.User),
+               'Teaching Sessions': s.Teaching_Sessions,
+               'Attended Sessions': s.Attended ,
+               'Course Title': s.Course_Title, 
+               'Submitted':s.Submitted 
+         }  for s in ps
+      ]
+
+   df = pd.DataFrame(project_data)
+  
+   chartt = scatterPlot(df)
+   context = {'student_filter':student_filter, 'gra': chartt }
+   return render(request, 'attendance/scatterplot.html', context)
+
+
+
+
+
 
 #functions for different data visuals
 
