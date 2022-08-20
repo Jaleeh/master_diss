@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from .filters import StudentFilter
 import plotly.express as px
 from attendance.cleaningdata import process_file
-from django.http import HttpResponseRedirect,HttpResponse
+from django.http import HttpResponseRedirect
 
 
 
@@ -23,7 +23,11 @@ def index(request):
         messages.error(request,'This is not a CSV file')
         return HttpResponseRedirect('/attendance/error') 
 
-   saving = process_file(csv_file) #from cleaningdata.py cleans data
+   saving = process_file(csv_file) 
+   if saving is None:
+      return HttpResponseRedirect('/attendance/error')
+
+   #from cleaningdata.py cleans data
 
 #code to save as 'file.csv' ,read and store into database
    if not saving.empty :
