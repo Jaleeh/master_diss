@@ -10,5 +10,6 @@ urlpatterns= [
     path('visuals/', views.visBar, name='visuals'),
     path('boxplot/', views.visBox, name='boxplot'),
     path('averageplot/', views.visAvg, name='averageplot'),
-     path('scatterplot/', views.visScatter, name='scatterplot')
+    path('scatterplot/', views.visScatter, name='scatterplot'),
+    path('error/', views.errorpage, name='error'),
    ]

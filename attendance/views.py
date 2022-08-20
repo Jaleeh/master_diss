@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from .filters import StudentFilter
 import plotly.express as px
 from attendance.cleaningdata import process_file
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse
 
 
 
@@ -21,6 +21,7 @@ def index(request):
   
    if not csv_file.name.endswith('.csv'): #error if not csv
         messages.error(request,'This is not a CSV file')
+        return HttpResponseRedirect('/attendance/error') 
 
    saving = process_file(csv_file) #from cleaningdata.py cleans data
 
@@ -32,9 +33,13 @@ def index(request):
       engine = create_engine('sqlite:///db.sqlite3') #connection to sqlite3 database
          
       data.to_sql(Student._meta.db_table,if_exists = 'replace',con=engine,index = False)
-      return HttpResponseRedirect('/attendance/visuals/') # navigates to visuals page after uploading file
+      return HttpResponseRedirect('/attendance/visuals') # navigates to visuals page after uploading file
    else:
-      return render(request,"attendance/error.html")#error page
+      return HttpResponseRedirect('/attendance/error')#error page
+
+def errorpage(request):
+   return render(request, "attendance/error.html")
+
 
 #filtering data from filters.py
 def visBar(request):
@@ -99,6 +104,8 @@ def visBox(request):
    return render(request, 'attendance/boxplot.html', context)
 
 
+
+
 def visScatter(request):
  
    student = Student.objects.all()
@@ -146,3 +153,4 @@ def scatterPlot(df):#combine student attended and assessments submitted
       fig = px.scatter(df, x="Submitted", y="Attended Sessions",color = 'Users')
       chartt = fig.to_html()
       return chartt
+
