@@ -20,7 +20,11 @@
         >attended sessions and submission scatter graph</a
       >
     </div>
-
+    <div>
+      <a href="{% url 'attendance:pieplot' %}"
+        >Number of students in a course Pie chart</a
+      >
+    </div>
     <div><a href="{% url 'attendance:visuals' %}">original bar graph</a></div>
     <div>
       {%if gra%} {{gra|safe|default:"nothing"}} {% else %} No data to graph.

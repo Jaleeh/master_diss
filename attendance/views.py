@@ -23,11 +23,11 @@ def index(request):
         messages.error(request,'This is not a CSV file')
         return HttpResponseRedirect('/attendance/error') 
 
+
+   #from cleaningdata.py cleans data
    saving = process_file(csv_file) 
    if saving is None:
       return HttpResponseRedirect('/attendance/error')
-
-   #from cleaningdata.py cleans data
 
 #code to save as 'file.csv' ,read and store into database
    if not saving.empty :
@@ -130,6 +130,27 @@ def visScatter(request):
    context = {'student_filter':student_filter, 'gra': chartt }
    return render(request, 'attendance/scatterplot.html', context)
 
+def visPie(request):
+ 
+   student = Student.objects.all()
+   student_filter = StudentFilter(request.GET,queryset=student)
+   ps = student_filter.qs
+   project_data = [ {
+               'Users': str(s.User),
+               'Teaching Sessions': s.Teaching_Sessions,
+               'Attended Sessions': s.Attended ,
+               'Course Title': s.Course_Title, 
+               'Submitted':s.Submitted 
+         }  for s in ps
+      ]
+
+   df = pd.DataFrame(project_data)
+  
+   chartt = piechart(df)
+   context = {'student_filter':student_filter, 'gra': chartt }
+   return render(request, 'attendance/pieplot.html', context)
+
+
 #functions for different data visuals
 
 def barPlot(df):#bar chart which 
@@ -158,3 +179,8 @@ def scatterPlot(df):#combine student attended and assessments submitted
       chartt = fig.to_html()
       return chartt
 
+def piechart(df):
+    if not df.empty:
+      fig = px.pie(df, values='Users', names='Course Title', title='Number of students in a course')
+      chartt = fig.to_html()
+      return chartt

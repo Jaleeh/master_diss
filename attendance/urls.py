@@ -11,5 +11,6 @@ urlpatterns= [
     path('boxplot/', views.visBox, name='boxplot'),
     path('averageplot/', views.visAvg, name='averageplot'),
     path('scatterplot/', views.visScatter, name='scatterplot'),
+    path('pieplot/', views.visPie, name='pieplot'),
     path('error/', views.errorpage, name='error'),
    ]
